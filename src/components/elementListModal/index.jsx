@@ -9,7 +9,7 @@ const ElementListModal = props => {
   const [confirmAble, setConfirmAble] = useState(false);
 
   const handleOk = () => {
-    onConfirm && onConfirm()
+    onConfirm && onConfirm(selectedItems)
     store.set('selectedElementItems',selectedItems)
   }
 
