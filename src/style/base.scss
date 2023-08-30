@@ -1,0 +1,84 @@
+* {
+  padding: 0;
+  margin: 0;
+  -webkit-touch-callout: none !important; // /系统默认菜单被禁用/
+  -webkit-user-select: none !important; // /webkit浏览器/
+  -moz-user-select: none !important; // /火狐/
+  -ms-user-select: none !important; // /IE10/
+  user-select: none !important;
+}
+html {
+  font-size: 14px;
+  line-height: 1.42;
+  font-family: 'PingFangSC-Regular', 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
+  box-sizing: border-box;
+  -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS */
+  tab-size: 4;
+}
+body {
+  color: #323232;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+}
+body,
+div {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  background-color: transparent; /* Remove the gray background on active links in IE 10 */
+}
+
+a:active,
+a:hover {
+  outline-width: 0; /* Remove the outline when hovering in all browsers */
+}
+
+input,
+textarea {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  -webkit-user-select: auto !important;
+}
+
+input {
+  font-size: 14px;
+  color: #323232;
+  border-radius: 0;
+}
+
+input::placeholder {
+  font-size: 14px;
+  color: #ccc;
+}
+
+textarea {
+  overflow: auto; /* Internet Explorer 11+ */
+  resize: vertical; /* Specify textarea resizability */
+}
+
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline-width: 0;
+}
+
+img {
+  border-style: none; /* Remove border when inside `a` element in IE 8/9/10 */
+}
+
+
+// 隐藏滚动条
+.scroll::-webkit-scrollbar {
+  display: none;
+  width: 0px;
+  height: 0px;
+  background-color: transparent;
+  border: 0;
+}
