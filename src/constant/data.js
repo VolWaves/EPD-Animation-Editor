@@ -1,6 +1,6 @@
 // 元素集合
 const elementList = []
-for (let i = 1; i < 132;i++){
+for (let i = 0; i < 128;i++){
   elementList.push({
     value: i,
     label: `元素${i}`,

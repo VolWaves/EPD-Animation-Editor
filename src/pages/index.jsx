@@ -8,7 +8,7 @@ import styles from './index.module.scss'
 const { TextArea } = Input;
 
 const HomePage = props => {
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
   const [ layerShow, setLayerShow ] = useState(false)
   const [currentSelectedElementItems, setCurrentSelectedElementItems] = useState([])
   useEffect(()=>{
@@ -68,7 +68,7 @@ const HomePage = props => {
             </div>
           </div>
           <div className="bottom-area flex-twice">
-            <FrameLine form={form}/>
+            <FrameLine/>
           </div>
         </div>) : null
       }
