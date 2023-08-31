@@ -1,5 +1,5 @@
 import React, {PureComponent, useEffect, useState} from 'react';
-import { Image, Input, Button ,Form  } from 'antd';
+import { Image, Input, Button ,Form } from 'antd';
 import ElementListModal from "@/components/elementListModal";
 import FrameLine from "@/components/frameLine";
 import store from "@/utils/store";
