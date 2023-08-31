@@ -99,20 +99,29 @@ const FrameLine = props => {
       key: 'time',
       width: 150,
       render:  (text, record, idx) => {
-        const state = record.state
-        const minTime = 10
-        const maxTime = state === 'wait' ? 100000 : 500
-        return (<Form.Item
-          name={`frames[${idx}.time]`}
-          rules={[
+        return (
+          <Form.Item noStyle shouldUpdate>
             {
-              required: true,
-              message: '时间必填',
-            },
-          ]}
-        >
-          <InputNumber min={minTime} max={maxTime} step={10}/>
-        </Form.Item>)
+              ({getFieldValue}) => {
+                const frames = getFieldValue('frames') || []
+                const {state} = frames[idx] || {}
+                const minTime = 10
+                const maxTime = state === 'wait' ? 100000 : 500
+                return (<Form.Item
+                  name={`frames[${idx}.time]`}
+                  rules={[
+                    {
+                      required: true,
+                      message: '时间必填',
+                    },
+                  ]}
+                >
+                  <InputNumber min={minTime} max={maxTime} step={10}/>
+                </Form.Item>)
+              }
+            }
+          </Form.Item>
+        )
       }
     },
     {
@@ -121,27 +130,37 @@ const FrameLine = props => {
       key: 'element',
       width: 500,
       render:  (text, record, idx) => {
-        const state = record.state
-        console.log('---------->>>>>',state)
-        return (<Form.Item
-          name={`frames[${idx}.element]`}
-          rules={[
-            {
-              required: state !== 'wait',
-              message: '元素必选',
-            },
-          ]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Please select"
-            style={{
-              width: '100%',
-            }}
-            disabled={state==='wait'}
-            options={elementOptions}
-          />
-        </Form.Item>)
+        return (<Form.Item noStyle shouldUpdate>
+          {
+            ({getFieldValue}) => {
+              const frames = getFieldValue('frames') || []
+              const {state} = frames[idx] || {}
+              return (
+                <Form.Item
+                  name={`frames[${idx}.element]`}
+                  rules={[
+                    {
+                      required: state !== 'wait',
+                      message: '元素必选',
+                    },
+                  ]}
+                  shouldUpdate
+                >
+                <Select
+                  mode="multiple"
+                  placeholder="Please select"
+                  style={{
+                    width: '100%',
+                  }}
+                  disabled={state === 'wait'}
+                  options={elementOptions}
+                />
+                </Form.Item>
+              )
+            }
+          }
+        </Form.Item>
+        )
       }
     },
     {
