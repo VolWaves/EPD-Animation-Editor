@@ -2,4 +2,9 @@
   padding: 20px;
   display: flex;
   justify-content: center;
+  :global {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
+  }
 }
