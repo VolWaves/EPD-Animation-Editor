@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Modal, Select, Form, Input, Space, InputNumber, Table } from 'antd';
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, Select, Form, Input, Divider, InputNumber, Table } from 'antd';
+import { PlusOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import {statusList} from "../../constant/data";
 import store from "@/utils/store";
 import styles from './index.module.scss'
@@ -11,9 +11,9 @@ const FrameLine = props => {
   const [list,setList] = useState([])
   const [loading, setLoading] = useState(false)
   const selectedItems = store.get('selectedElementItems')
+  const curFrames = store.get('curFrames')
   const [elementOptions , setElementOptions ] = useState([])
   useEffect(()=>{
-    form.setFieldsValue({frames: []})
     if(Array.isArray(selectedItems)){
       let result = selectedItems.map(i=>{
         return {
@@ -23,7 +23,17 @@ const FrameLine = props => {
       })
       setElementOptions(result)
     }
+    let framesData = []
+    if(Array.isArray(curFrames)){
+      framesData = curFrames
+    }
+    form.setFieldsValue({frames: framesData})
+    setList(framesData)
   },[])
+
+  const saveCurList = (data) => {
+    store.set('curFrames', data)
+  }
 
   const handleAddFrame = () => {
     const newItem = {
@@ -35,28 +45,42 @@ const FrameLine = props => {
     const newList = [...list,newItem]
     setList(newList)
     form.setFieldsValue({frames: newList})
+    saveCurList(newList)
   }
 
   const handleDelete = (idx) => {
-    const { getFieldsValue, setFieldsValue } = props.form
-    const { frames = [] } = getFieldsValue()
+    const { setFieldsValue } = props.form
+    const frames = form.getFieldValue('frames')
     frames.splice(idx, 1)
     setFieldsValue({ frames })
     // 显示条数要更新
     const newData = list.slice()
     newData.splice(idx, 1)
     setList(newData)
+    saveCurList(newData)
   }
 
-  const onStatusChange = (value,idx) => {
-    const { getFieldsValue, setFieldsValue } = props.form
-    const { frames = [] } = getFieldsValue()
+  const handleCopy = (idx) => {
+    const { setFieldsValue } = props.form
+    const frames = form.getFieldValue('frames')
+    const copyItem = {...frames[idx],id: `created${new Date().getTime()}`,}
+    frames.push(copyItem)
+    setFieldsValue({ frames })
+    const newData = [...list,copyItem]
+    setList(newData)
+    saveCurList(newData)
+  }
+
+  const onFormChange = (value,idx,name) => {
+    const { setFieldsValue } = props.form
+    const frames = form.getFieldValue('frames')
     const newItem = frames[idx] || {}
-    newItem.state = value
+    newItem[name] = value
     frames[idx] = newItem
     setFieldsValue({frames})
-    list[idx].state = value
+    list[idx][name] = value
     setList(list)
+    saveCurList(list)
   }
 
   const columns = [
@@ -76,13 +100,13 @@ const FrameLine = props => {
       width: 150,
       render:  (text, record, idx) => {
         return (<Form.Item
-          name={`frames[${idx}.state]`}
-          initialValue='wait'
+          name={`frames[${idx}].state`}
+          initialValue={text}
         >
           <Select
             placeholder="请选择状态"
             value={record.state}
-            onChange={(value)=>{onStatusChange(value,idx)}}
+            onChange={(value)=>{onFormChange(value,idx,'state')}}
           >
             {
               statusList.map((item,index)=>{
@@ -108,15 +132,16 @@ const FrameLine = props => {
                 const minTime = 10
                 const maxTime = state === 'wait' ? 100000 : 500
                 return (<Form.Item
-                  name={`frames[${idx}.time]`}
+                  name={`frames[${idx}].time`}
                   rules={[
                     {
                       required: true,
                       message: '时间必填',
                     },
                   ]}
+                  initialValue={text}
                 >
-                  <InputNumber min={minTime} max={maxTime} step={10}/>
+                  <InputNumber min={minTime} max={maxTime} step={10} value={text} onChange={(e)=>onFormChange(e,idx,'time')}/>
                 </Form.Item>)
               }
             }
@@ -137,13 +162,14 @@ const FrameLine = props => {
               const {state} = frames[idx] || {}
               return (
                 <Form.Item
-                  name={`frames[${idx}.element]`}
+                  name={`frames[${idx}].element`}
                   rules={[
                     {
                       required: state !== 'wait',
                       message: '元素必选',
                     },
                   ]}
+                  initialValue={text}
                   shouldUpdate
                 >
                 <Select
@@ -154,6 +180,7 @@ const FrameLine = props => {
                   }}
                   disabled={state === 'wait'}
                   options={elementOptions}
+                  onChange={(value)=>{onFormChange(value,idx,'element')}}
                 />
                 </Form.Item>
               )
@@ -174,6 +201,13 @@ const FrameLine = props => {
               icon={<MinusCircleOutlined />}
             >
               删除
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              onClick={() => handleCopy(idx)}
+              icon={<CopyOutlined />}
+            >
+              复制
             </Button>
           </>
         )
@@ -196,7 +230,7 @@ const FrameLine = props => {
             }}
           />
         </Form>
-        <div>
+        <div className="flex align-center justify-center mt20">
           <Button
             onClick={() => handleAddFrame()}
             icon={<PlusOutlined />}
