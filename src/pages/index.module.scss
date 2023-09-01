@@ -1,0 +1,36 @@
+.page {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  :global {
+    .textArea {
+      border: 1px solid #f8f8f8;
+      background: #f6f6f6;
+      border-radius: 10px;
+      padding: 10px;
+      line-height: 1.5;
+      display: block;
+      width: 100%;
+      height: 200px;
+      box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      .top-area {
+        .btn-area {
+          padding: 20px;
+        }
+        .right {
+          padding: 10px;
+        }
+      }
+      .bottom-area {
+        background: #f6f6f6;
+
+      }
+    }
+  }
+}
