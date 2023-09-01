@@ -2,16 +2,9 @@
   padding: 20px;
   display: flex;
   justify-content: center;
-  height: 66vh;
-  box-sizing: border-box;
-  overflow-y: scroll;
-  position: relative;
-  .footer {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-  }
-  .itemWrap{
-    padding: 10px;
+  :global {
+    .ant-form-item {
+      margin-bottom: 0;
+    }
   }
 }
