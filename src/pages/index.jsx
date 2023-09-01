@@ -50,7 +50,7 @@ const HomePage = props => {
         const frames = form.getFieldValue('frames')
         console.log('--------',frames)
         // todo 生成代码的结果，注意转成字符串
-        const result = '我托了关系才进了这个群，聊天跟不上，不聊又怕被踢，聊了又没人理，所以整天一个人自言自语，我都快得抑郁症了，还请活泼开朗阳光的姐姐加我，我们一起去苏州吃螃蟹，一起去青岛吹海风，一起去柳州吃螺蛳粉，一起去迪士尼看烟花，一起去沂蒙山看日出日落，去新疆吃烤串儿，去北京吃烤鸭，去东北吃鸡架，去重庆吃火锅，去陕西吃泡馍，去武汉吃热干面，然后再到驻马店喝胡辣汤，顺利的话我们会陪伴在彼此身边，我们会有一个灿烂的余生，不顺利的话今天疯狂星期四v50请我吃一顿肯德基'
+        const result = '4RbgAACAAAAAAAAAAAAAAAAAodAHoOEWEAAAAAAAAAAAAAAAAAAAAKHQB6DgFiAAAAAAAAAAAAAAAAAAAACh0Aeg4BbQAACAAAAAAAAAAAAAAAAAodAHoA=='
         setCodeResult(result)
       })
       .catch((errorInfo) => {
@@ -92,7 +92,7 @@ const HomePage = props => {
             <div className="right flex-sub">
               <div className="flex justify-between btn-area">
                 <Button type="primary" danger onClick={resetAll}>
-                  重置元素
+                  内容重置
                 </Button>
                 <Button type="primary" onClick={handleStart}>生成代码</Button>
               </div>

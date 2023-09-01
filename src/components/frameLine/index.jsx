@@ -18,7 +18,7 @@ const FrameLine = props => {
       let result = selectedItems.map(i=>{
         return {
           value: i,
-          label: `元素${i}`,
+          label: `SEG${i}`,
         }
       })
       setElementOptions(result)
@@ -150,7 +150,7 @@ const FrameLine = props => {
       }
     },
     {
-      title: '可选元素',
+      title: 'SEG线',
       dataIndex: 'element',
       key: 'element',
       width: 500,
@@ -166,7 +166,7 @@ const FrameLine = props => {
                   rules={[
                     {
                       required: state !== 'wait',
-                      message: '元素必选',
+                      message: '非等待帧必须选择SEG线',
                     },
                   ]}
                   initialValue={text}
