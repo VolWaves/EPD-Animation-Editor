@@ -3,7 +3,7 @@ const elementList = []
 for (let i = 1; i < 132;i++){
   elementList.push({
     value: i,
-    label: `元素${i}`,
+    label: `SEG${i}`,
   })
 }
 

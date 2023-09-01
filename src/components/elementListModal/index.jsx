@@ -21,7 +21,7 @@ const ElementListModal = props => {
   return (
     <>
       <Modal
-        title="请选择"
+        title="请选择项目使用的 SEG 线"
         open={open}
         closable={false}
         footer={<Button type="primary" onClick={handleOk} disabled={!confirmAble}>
