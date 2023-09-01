@@ -5,6 +5,7 @@ import FrameLine from "@/components/frameLine"
 import store from "@/utils/store"
 import imgHolder from "../assets/holder.png"
 import styles from "./index.module.scss"
+import clipboardy from "clipboardy"
 
 const HomePage = (props) => {
 	const [form] = Form.useForm()
@@ -129,8 +130,7 @@ const HomePage = (props) => {
 
 	const copy = () => {
 		if (!codeResult) return
-		textAreaRef.current.select()
-		document.execCommand("copy")
+		clipboardy.write(textAreaRef.current.value)
 		messageApi.open({
 			type: "success",
 			content: "复制成功",
