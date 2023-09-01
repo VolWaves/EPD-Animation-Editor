@@ -112,7 +112,7 @@ const HomePage = (props) => {
 					for (var i = 0; i < size; i++) {
 						binary += String.fromCharCode(dataView[i])
 					}
-					return window.btoa(binary)
+					return window.btoa(binary) + "=="
 				}
 				const result = frame2base64(frames)
 				setCodeResult(result)
