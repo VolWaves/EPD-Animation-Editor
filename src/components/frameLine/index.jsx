@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { Button, Modal, Select, Form, Input, Divider, InputNumber, Table } from 'antd';
 import { PlusOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
+import scrollIntoView from 'scroll-into-view';
 import {statusList} from "../../constant/data";
 import store from "@/utils/store";
 import styles from './index.module.scss'
@@ -10,6 +11,9 @@ const FrameLine = props => {
   const { Option } = Select;
   const [list,setList] = useState([])
   const [loading, setLoading] = useState(false)
+  const [tableHeight, setTableHeight] = useState(240)
+  const pageRef = useRef(null)
+  const tableRef = useRef();
   const selectedItems = store.get('selectedElementItems')
   const curFrames = store.get('curFrames')
   const [elementOptions , setElementOptions ] = useState([])
@@ -29,6 +33,8 @@ const FrameLine = props => {
     }
     form.setFieldsValue({frames: framesData})
     setList(framesData)
+    const height = pageRef.current.clientHeight;
+    setTableHeight(height - 120)
   },[])
 
   const saveCurList = (data) => {
@@ -46,6 +52,13 @@ const FrameLine = props => {
     setList(newList)
     form.setFieldsValue({frames: newList})
     saveCurList(newList)
+    setTimeout(()=>{
+      scrollIntoView(document.querySelector('.scroll-row'), {
+        align: {
+          top: 0,
+        },
+      });
+    },100)
   }
 
   const handleDelete = (idx) => {
@@ -69,6 +82,13 @@ const FrameLine = props => {
     const newData = [...list,copyItem]
     setList(newData)
     saveCurList(newData)
+    setTimeout(()=>{
+      scrollIntoView(document.querySelector('.scroll-row'), {
+        align: {
+          top: 0,
+        },
+      });
+    },100)
   }
 
   const onFormChange = (value,idx,name) => {
@@ -141,7 +161,7 @@ const FrameLine = props => {
                   ]}
                   initialValue={text}
                 >
-                  <InputNumber min={minTime} max={maxTime} step={10} value={text} onChange={(e)=>onFormChange(e,idx,'time')}/>
+                  <InputNumber min={minTime} max={maxTime} step={10} value={text} onChange={(e)=>onFormChange(e,idx,'time')} addonAfter="ms"/>
                 </Form.Item>)
               }
             }
@@ -197,17 +217,24 @@ const FrameLine = props => {
         return (
           <>
             <Button
-              onClick={() => handleDelete(idx)}
-              icon={<MinusCircleOutlined />}
+              onClick={() => handleCopy(idx)}
+              icon={<CopyOutlined  style={{
+                color: '#88c99d'
+              }}/>}
+              style={{
+                color: '#88c99d'
+              }}
             >
-              删除
+              复制
             </Button>
             <Divider type="vertical" />
             <Button
-              onClick={() => handleCopy(idx)}
-              icon={<CopyOutlined />}
+              onClick={() => handleDelete(idx)}
+              icon={<MinusCircleOutlined />}
+              type="primary"
+              danger
             >
-              复制
+              删除
             </Button>
           </>
         )
@@ -216,7 +243,7 @@ const FrameLine = props => {
   ];
 
   return (
-    <div className={styles.wrap}>
+    <div className={styles.wrap} ref={pageRef}>
       <div>
         <Form form={form}>
           <Table
@@ -224,9 +251,12 @@ const FrameLine = props => {
             rowKey="id"
             dataSource={list}
             pagination={false}
+            size={'small'}
             loading={loading}
+            ref={tableRef}
+            rowClassName={(record, index) => (index === list.length - 1 ? 'scroll-row' : '')}
             scroll={{
-              y: 240,
+              y: tableHeight,
             }}
           />
         </Form>
