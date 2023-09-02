@@ -45,87 +45,116 @@ const HomePage = (props) => {
 		location.reload()
 	}
 
-	const handleStart = () => {
-		form.validateFields()
-			.then((values) => {
-				const frames = form.getFieldValue("frames")
-				const frame2base64 = function (frames) {
-					// console.log("--------", frames)
-					let size = 0
-					frames.forEach((element) => {
-						if (
-							element.state == "black" ||
-							element.state == "white"
-						) {
-							size += 18
-						}
-						if (element.state == "wait") {
-							size += 4
-						}
-					})
-					const buf = new ArrayBuffer(size)
-					const dataView = new Uint8Array(buf)
-					const stateMap = {
-						white: 0xe0,
-						black: 0xe1,
-						wait: 0xa1,
+	const timeFormat = () => {
+		return new Promise(resolve => {
+			const frames = form.getFieldValue("frames")
+			let needFormatTime = false
+			const newFrames = []
+			if (Array.isArray(frames)){
+				frames.forEach(i=>{
+					const { time }  = i
+					let newTime = time
+					if(time%10 > 0){
+						needFormatTime = true
+						newTime = Math.round(time/10)*10
+						i.time = newTime
 					}
-					let currentIdx = 0
-					let isErr = 0
-					frames.forEach((element) => {
-						dataView[currentIdx] = stateMap[element.state]
-						if (
-							dataView[currentIdx] == 0xe0 ||
-							dataView[currentIdx] == 0xe1
-						) {
-							dataView[currentIdx + 1] = Math.round(
-								element.time / 10
-							)
-							for (let index = 2; index < 18; index++) {
-								dataView[currentIdx + index] = 0x00
+					newFrames.push(i)
+				})
+			}
+			if(needFormatTime){
+				store.set('curFrames', newFrames)
+				form.setFieldValue("frames",newFrames)
+				resolve()
+			}else {
+				resolve()
+			}
+		})
+	}
+
+	const handleStart = () => {
+		timeFormat().then(()=>{
+			form.validateFields()
+				.then((values) => {
+					const frames = form.getFieldValue("frames")
+					const frame2base64 = function (frames) {
+						// console.log("--------", frames)
+						let size = 0
+						frames.forEach((element) => {
+							if (
+								element.state == "black" ||
+								element.state == "white"
+							) {
+								size += 18
 							}
-							element.element.forEach((item) => {
-								dataView[
-									currentIdx + 2 + Math.floor(item / 8)
-								] |= 0x80 >> item % 8
-							})
-							currentIdx += 18
-						} else if (dataView[currentIdx] == 0xa1) {
-							dataView[currentIdx + 1] = element.time & 0xff
-							dataView[currentIdx + 2] =
-								(element.time >> 8) & 0xff
-							dataView[currentIdx + 3] = 0xa0
-							currentIdx += 4
-						} else {
-							isErr += 1
+							if (element.state == "wait") {
+								size += 4
+							}
+						})
+						const buf = new ArrayBuffer(size)
+						const dataView = new Uint8Array(buf)
+						const stateMap = {
+							white: 0xe0,
+							black: 0xe1,
+							wait: 0xa1,
 						}
-					})
-					if (isErr) {
+						let currentIdx = 0
+						let isErr = 0
+						frames.forEach((element) => {
+							dataView[currentIdx] = stateMap[element.state]
+							if (
+								dataView[currentIdx] == 0xe0 ||
+								dataView[currentIdx] == 0xe1
+							) {
+								dataView[currentIdx + 1] = Math.round(
+									element.time / 10
+								)
+								for (let index = 2; index < 18; index++) {
+									dataView[currentIdx + index] = 0x00
+								}
+								element.element.forEach((item) => {
+									dataView[
+									currentIdx + 2 + Math.floor(item / 8)
+										] |= 0x80 >> item % 8
+								})
+								currentIdx += 18
+							} else if (dataView[currentIdx] == 0xa1) {
+								dataView[currentIdx + 1] = element.time & 0xff
+								dataView[currentIdx + 2] =
+									(element.time >> 8) & 0xff
+								dataView[currentIdx + 3] = 0xa0
+								currentIdx += 4
+							} else {
+								isErr += 1
+							}
+						})
+						if (isErr) {
+							messageApi.open({
+								type: "error",
+								content: "未知的帧类型",
+							})
+							return
+						}
+						// console.log("Size:", size)
+						let binary = ""
+						for (var i = 0; i < size; i++) {
+							binary += String.fromCharCode(dataView[i])
+						}
+						return window.btoa(binary) + "=="
+					}
+					const result = frame2base64(frames)
+					setCodeResult(result)
+				})
+				.catch((errorInfo) => {
+					console.log(errorInfo)
+					if (errorInfo) {
 						messageApi.open({
 							type: "error",
-							content: "未知的帧类型",
+							content: "请检查未填写的项目",
 						})
-						return
 					}
-					// console.log("Size:", size)
-					let binary = ""
-					for (var i = 0; i < size; i++) {
-						binary += String.fromCharCode(dataView[i])
-					}
-					return window.btoa(binary) + "=="
-				}
-				const result = frame2base64(frames)
-				setCodeResult(result)
-			})
-			.catch((errorInfo) => {
-				console.log(errorInfo)
-				if (errorInfo) {
-					messageApi.open({
-						type: "error",
-						content: "请检查未填写的项目",
-					})
-				}
-			})
+				})
+		})
 	}
 
 	const copy = () => {

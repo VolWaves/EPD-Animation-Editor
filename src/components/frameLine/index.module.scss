@@ -3,9 +3,19 @@
   display: flex;
   justify-content: center;
   height: 100%;
+  box-sizing:border-box;
+  padding-bottom: 70px;
+  position: relative;
   :global {
     .ant-form-item {
       margin-bottom: 0;
+    }
+    .bottom-btn {
+      height: 70px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
     }
   }
 }
