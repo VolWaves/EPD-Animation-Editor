@@ -2,6 +2,8 @@
 
 段式墨水屏帧动画编辑器
 
+![Screenshot](https://github.com/VolWaves/EPD-Animation-Editor/assets/1407471/f2c7ea76-87ab-4f72-93ba-cc23c2441b1c)
+
 ## 用法
 
 1. 选择当前项目用到的 `SEG`线
