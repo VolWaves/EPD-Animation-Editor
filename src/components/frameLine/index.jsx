@@ -1,5 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
-import { Button, Modal, Select, Form, Input, Divider, InputNumber, Table , Spin, Popconfirm } from 'antd';
+import React, {useEffect, useRef, useState, memo} from 'react';
+import { Button, Select, Form, Divider, InputNumber, Table , Spin, Popconfirm } from 'antd';
 import { PlusOutlined, MinusCircleOutlined, CopyOutlined } from '@ant-design/icons';
 import scrollIntoView from 'scroll-into-view';
 import {statusList} from "../../constant/data";
@@ -7,7 +7,7 @@ import store from "@/utils/store";
 import styles from './index.module.scss'
 const { Column } = Table;
 const { Option } = Select;
-const FrameTable = (props) => {
+const FrameTable = memo((props) => {
   const { frames, form, add, remove, tableHeight, elementOptions } = props;
   const tableRef = useRef();
   const handleCopy = (idx) => {
@@ -136,7 +136,7 @@ const FrameTable = (props) => {
                       step={10}
                       addonAfter="ms"
                       onChange={(value)=>{onFormChange(value,idx,'time')}}
-                      />
+                    />
                   </Form.Item>)
                 }
               }
@@ -219,8 +219,9 @@ const FrameTable = (props) => {
       />
     </Table>
   )
-}
-const FrameLine = props => {
+})
+
+const FrameLine = memo(props => {
   const {form} = props
   const [loading, setLoading] = useState(true)
   const [tableHeight, setTableHeight] = useState(240)
@@ -277,6 +278,7 @@ const FrameLine = props => {
     </div>
   )
 
-}
+})
+
 
 export default FrameLine

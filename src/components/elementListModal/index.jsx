@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Button, Modal, Select } from 'antd';
 import { elementList } from "@/constant/data";
 import store from "@/utils/store";
 import './index.module.scss'
-const ElementListModal = props => {
+const ElementListModal = memo(props => {
   const { open, onConfirm } = props
   const [selectedItems, setSelectedItems] = useState([]);
   const [confirmAble, setConfirmAble] = useState(false);
@@ -25,8 +25,8 @@ const ElementListModal = props => {
         open={open}
         closable={false}
         footer={<Button type="primary" onClick={handleOk} disabled={!confirmAble}>
-               确定
-             </Button>}>
+          确定
+        </Button>}>
         <Select
           mode="multiple"
           size="large"
@@ -41,5 +41,6 @@ const ElementListModal = props => {
       </Modal>
     </>
   );
-}
+})
+
 export default ElementListModal
